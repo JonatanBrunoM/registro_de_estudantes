@@ -1,5 +1,5 @@
 abstract class IRepository<T> {
-  Future<List<T>> search();
+  Future<List<T>> findAll();
 
   Future<T> find(int id);
 

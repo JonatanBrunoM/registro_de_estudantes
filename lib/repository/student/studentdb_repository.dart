@@ -26,26 +26,52 @@ class StudentDBRepository implements StudentRepository {
   }
 
   @override
-  Future<int> insert(Student entity) {
-    throw UnimplementedError();
+  Future<List<Student>> findAll() async {
+    Database database = await dbLocal.getConnection();
+    var data = await database.query(
+      dbLocal.table,
+    );
+    database.close();
+    return data.map((map) => Student.fromMap(map)).toList();
   }
 
   @override
-  Future<int> remove(
-      {required String conditions, required List conditionValues}) {
-    throw UnimplementedError();
+  Future<int> insert(Student entity) async {
+    Database database = await dbLocal.getConnection();
+    int result = await database.insert(dbLocal.table, entity.toMap());
+    database.close();
+    return result;
   }
 
   @override
-  Future<List<Student>> search() {
-    throw UnimplementedError();
+  Future<int> remove({
+    required String conditions,
+    required List conditionValues,
+  }) async {
+    Database database = await dbLocal.getConnection();
+    int result = await database.delete(
+      dbLocal.table,
+      where: conditions,
+      whereArgs: conditionValues,
+    );
+    database.close();
+    return result;
   }
 
   @override
-  Future<int> update(
-      {required Student entity,
-      required String conditions,
-      required List conditionValues}) {
-    throw UnimplementedError();
+  Future<int> update({
+    required Student entity,
+    required String conditions,
+    required List conditionValues,
+  }) async {
+    Database database = await dbLocal.getConnection();
+    int result = await database.update(
+      dbLocal.table,
+      entity.toMap(),
+      where: conditions,
+      whereArgs: conditionValues,
+    );
+    database.close();
+    return result;
   }
 }
